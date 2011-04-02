@@ -1,0 +1,279 @@
+<html>
+  <head>
+    <!--<script src="core/embed.js"></script>-->
+<script id="vshader" type="x-shader/x-vertex">
+  attribute vec4 vPosition;
+  attribute vec4 vTexCoord;
+  varying vec2 texCoord;
+  void main()
+  {
+    gl_Position = vPosition;
+    texCoord.xy = vTexCoord.xy;
+  }
+</script>
+
+<script id="fshader" type="x-shader/x-fragment">
+#ifdef GL_ES
+precision highp float;
+#endif
+  uniform sampler2D sTexture;
+  uniform sampler2D sTextureRule;
+  uniform sampler2D sTextureTo;
+  uniform float uRatio;
+  uniform float uVague;
+
+
+  varying vec2 texCoord;
+  void main()
+  {
+    vec4 fromColor = texture2D(sTexture, texCoord);
+    vec4 ruleColor = texture2D(sTextureRule, texCoord);
+    vec4 toColor = texture2D(sTextureTo, texCoord);
+    //float alpha = 255.0 / uVague * ( ruleColor[0] * 255.0 - ( uVague + 255.0 ) * uRatio ) + uVague ;
+    //float alpha = 255.0 / uVague * ruleColor[0] - 1.0 / uVague * ( uVague + 255.0 ) * uRatio + 1.0;
+    float alpha = 1.0 / uVague * ( 255.0 * ruleColor[0] - ( uVague + 255.0 ) * uRatio ) + 1.0;
+    alpha = max( min( alpha, 1.0 ), 0.0 );
+    gl_FragColor = alpha * fromColor + (1.0 - alpha) * toColor;
+    gl_FragColor.a = 1.0;
+  }
+</script>
+
+<script>
+  var cv_width = 0;
+  var cv_height = 0;
+  var vertint;
+  var texint;
+  var tex;
+  var tex_rule;
+  var tex_ruleint;
+  var tex_to;
+  var vague = 1, ratio = 0;
+  var vshader, fshader, t0Location, t1Location, t2Location;
+  var uVagueLoc, uRatioLoc;
+  function init(canvas)
+  {
+    var gl = canvas.getContext("experimental-webgl");
+    if (!gl) {
+      alert("Failed to create WebGL context.");
+      return null;
+    }
+
+    var vshaderScript = document.getElementById("vshader");
+    var fshaderScript = document.getElementById("fshader");
+    if (!vshaderScript) {
+      alert("Failed to get vshaderScript.");
+      return null;
+    }
+    if (!fshaderScript) {
+      alert("Failed to get fshaderScript.");
+      return null;
+    }
+
+    vshader = gl.createShader(gl.VERTEX_SHADER);
+    fshader = gl.createShader(gl.FRAGMENT_SHADER);
+    if (!vshader || !fshader) {
+      alert("Failed to createShader().");
+      return null;
+    }
+
+    gl.shaderSource(vshader, vshaderScript.text);
+    gl.shaderSource(fshader, fshaderScript.text);
+
+    gl.compileShader(vshader);
+    gl.compileShader(fshader);
+
+    if (!gl.getShaderParameter(fshader, gl.COMPILE_STATUS)) {
+      alert(gl.getShaderInfoLog(fshader));
+      return null;
+    }
+
+    gl.program = gl.createProgram();
+
+    gl.attachShader(gl.program, vshader);
+    gl.attachShader(gl.program, fshader);
+
+    gl.bindAttribLocation(gl.program, 0, "vPosition");
+    gl.bindAttribLocation(gl.program, 1, "vTexCoord");
+
+    gl.enableVertexAttribArray(0);  // vPosition
+    gl.enableVertexAttribArray(1);  // vTexCoord
+
+    gl.linkProgram(gl.program);
+    gl.useProgram(gl.program);
+
+    t0Location = gl.getUniformLocation(gl.program, 'sTexture');
+    t1Location = gl.getUniformLocation(gl.program, 'sTextureRule');
+    t2Location = gl.getUniformLocation(gl.program, 'sTextureTo');
+    uVagueLoc = gl.getUniformLocation(gl.program, 'uVague');
+    uRatioLoc = gl.getUniformLocation(gl.program, 'uRatio');
+
+
+    gl.clearColor(0, 0, 0, 1);
+    gl.clearDepth(1000);
+
+    gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    gl.enable(gl.TEXTURE_2D);
+
+    tex = gl.createTexture();
+    tex.image = new Image();
+    tex.image.onload = function() {
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tex.image);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.bindTexture(gl.TEXTURE_2D, null);
+    }
+    tex.image.src = "from.png";
+
+    tex_rule = gl.createTexture();
+    tex_rule.image = new Image();
+    tex_rule.image.onload = function(){
+      gl.bindTexture(gl.TEXTURE_2D, tex_rule);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tex_rule.image);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.bindTexture(gl.TEXTURE_2D, null);
+    };
+    tex_rule.image.src = "rule.png";
+
+    tex_to = gl.createTexture();
+    tex_to.image = new Image();
+    tex_to.image.onload = function(){
+      gl.bindTexture(gl.TEXTURE_2D, tex_to);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tex_to.image);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.bindTexture(gl.TEXTURE_2D, null);
+    };
+    tex_to.image.src = "to.png";
+
+
+    var vertices = [
+      +1.0, +1.0,  0.0,
+      -1.0, +1.0,  0.0,
+      +1.0, -1.0,  0.0,
+      -1.0, -1.0,  0.0
+    ];
+    vertint = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertint);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    vertint.itemSize = 3;
+    vertint.numItems = 4;
+
+    var texcoords = [
+      1, 0,
+      0, 0,
+      1, 1,
+      0, 1,
+    ];
+    texint = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, texint);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texcoords), gl.STATIC_DRAW);
+    texint.itemSize = 2;
+    texint.numItems = 4;
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+    return gl;
+  }
+
+  function reshape(gl)
+  {
+    var canvas = document.getElementById("myCanvas");
+    if (canvas.clientWidth == cv_width
+     && canvas.clientHeight == cv_height) {
+      return;
+    }
+    cv_width = canvas.clientWidth;
+    cv_height = canvas.clientHeight;
+
+    gl.viewport(0, 0, cv_width, cv_height);
+  }
+  var lastTime = 0;
+  var fps = 0;
+
+  function Render(gl)
+  {
+    reshape(gl);
+
+    var timeNow = Date.now();
+    if( lastTime != 0 ){
+      var elapsed = timeNow - lastTime;
+      ratio += (  1 * elapsed ) / 1000;
+      fps = 1000 / elapsed;
+      console.log(fps);
+    }
+    lastTime = timeNow;
+
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertint);
+    gl.vertexAttribPointer(0, vertint.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, texint);
+    gl.vertexAttribPointer(1, texint.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.uniform1i(t0Location, 0);
+
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, tex_rule);
+    gl.uniform1i(t1Location, 1);
+
+    gl.activeTexture(gl.TEXTURE2);
+    gl.bindTexture(gl.TEXTURE_2D, tex_to);
+    gl.uniform1i(t2Location, 2);
+
+    gl.uniform1f(uVagueLoc, vague);
+    gl.uniform1f(uRatioLoc, ratio);
+
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertint.numItems);
+
+    gl.flush();
+
+  }
+  var atimer, ggll;
+
+  function start()
+  {
+    var canvas = document.getElementById("myCanvas");
+    canvas.width = 640;
+    canvas.height = 480;
+
+    cv_width = canvas.width;
+    cv_height = canvas.height;
+
+    var gl = ggll = init(canvas);
+    restart(gl);
+
+  }
+  function restart(gl){
+    clearInterval(atimer);
+    ratio = 0;
+    lastTime = 0;
+    atimer = setInterval(function() { Render(gl);if( ratio > 1 ) {clearInterval(atimer);} }, 1000 / 60);
+  }
+</script>
+</head>
+
+<body onload="start()">
+<canvas id="myCanvas"> </canvas>
+<form>
+  <input type="button" value="restart" onclick="restart(ggll)">
+  <input type="button" value="stop" onclick="clearInterval(atimer)">
+  vague: <input type="text" value="1" onchange="vague=this.value;restart(ggll);">
+
+</form>
+</body>
+</html>
+
