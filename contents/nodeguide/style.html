@@ -271,7 +271,7 @@
 
   <h2 id="constants"><a href="#TOC">定数</a></h2>
   <p>定数は普通の変数やクラスのプロパティとして、すべて大文字で宣言されるべきです。</p>
-  <p>node.js(V8)は実はMozilla拡張ののconst文をサポートしているのですが、残念ながらクラスのメンバには適用できず、ECMA標準にも含まれていないのです。</p>
+  <p>node.js(V8)は実はMozilla拡張のconst文をサポートしているのですが、残念ながらクラスのメンバには適用できず、ECMA標準にも含まれていないのです。</p>
   <p><em>せいかい:</em></p>
   <pre class="sourceCode">
   <code class="javascript">
@@ -285,11 +285,11 @@
   <p><em>まちがい:</em></p>
   <pre class="sourceCode">
   <code class="javascript">
-  <span class="kw">const</span> SECOND = <span class="dv">1</span> * <span class="dv">1000</span>;<br />
-  <br />
-  <span class="kw">function</span> File() {<br />
-  }<br />
-  <span class="kw">File</span>.<span class="fu">fullPermissions</span> = <span class="dv">0777</span>;&#160;
+    <span class="kw">const</span> SECOND = <span class="dv">1</span> * <span class="dv">1000</span>;<br />
+    <br />
+    <span class="kw">function</span> File() {<br />
+    }<br />
+    <span class="kw">File</span>.<span class="fu">fullPermissions</span> = <span class="dv">0777</span>;&#160;
   </code>
   </pre>
 
@@ -330,10 +330,10 @@
   <p><em>まちがい:</em></p>
   <pre class="sourceCode">
   <code class="javascript">
-  <span class="kw">var</span> a = <span class="dv">0</span>;<br />
-  <span class="kw">if</span> (a == <span class="ch">''</span>) {<br />
-  &#160;&#160;<span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">'losing'</span>);<br />
-  }
+    <span class="kw">var</span> a = <span class="dv">0</span>;<br />
+    <span class="kw">if</span> (a == <span class="ch">''</span>) {<br />
+    &#160;&#160;<span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">'losing'</span>);<br />
+    }
   </code>
   </pre>
 
