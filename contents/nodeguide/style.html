@@ -1,0 +1,506 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Felix's Node.js Style Guide</title>
+  <style type="text/css">
+    body{
+      font-family: Georgia,serif;
+      line-height: 1.6;
+      padding: 10px 40px;
+    }
+
+    p, li, dd, dt{
+      font-size: 18px;
+    }
+
+    a{
+      color: #0050C0;
+      margin: 0 3px;
+    }
+
+    h2 a{
+      margin: 0;
+    }
+
+    a:visited{
+      color: #B950B7;
+    }
+
+    pre.sourceCode{
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      -o-border-radius: 5px;
+      -ms-border-radius: 5px;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 14px;
+      font-family: "Courier New";
+      background-color: #000;
+      color: #fff;
+      line-height: 0.8;
+      padding: 0;
+    }
+
+
+
+    .copyright{
+      font-size: 12px;
+    }
+
+    h1 a, h2 a, h3 a, h4 a{
+      color: #000;
+      text-decoration: none;
+    }
+
+    h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover{
+      text-decoration: underline;
+    }
+
+    .sourceCode span.kw { color: #C6C5FE; font-weight: bold; }
+    .sourceCode span.dt { color: #fff; }
+    .sourceCode span.dv { color: #FF73FD; }
+    .sourceCode span.bn { color: #40a070; }
+    .sourceCode span.fl { color: #40a070; }
+    .sourceCode span.ch { color: #A8FF60; }
+    .sourceCode span.st { color: #A8FF60; }
+    .sourceCode span.co { color: #60a0b0; font-style: italic; }
+    .sourceCode span.ot { color: #007020; }
+    .sourceCode span.al { color: red; font-weight: bold; }
+    .sourceCode span.fu { color: #fff; }
+    .sourceCode span.re { }
+    .sourceCode span.er { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Felix's Node.js Style Guide</h1>
+  <nav id="TOC">
+  <ul>
+    <li>
+      <a href="#tab-vs-spaces">Tab vs Spaces</a>
+    </li>
+    <li>
+      <a href="#semicolons">セミコロン</a>
+    </li>
+    <li>
+      <a href="#editors">エディタ</a>
+    </li>
+    <li>
+      <a href="#trailing-whitespace">末尾の空白</a>
+    </li>
+    <li>
+      <a href="#line-length">一行の長さ</a>
+    </li>
+    <li>
+      <a href="#quotes">クォート</a>
+    </li>
+    <li>
+      <a href="#braces">中括弧</a>
+    </li>
+    <li>
+      <a href="#variable-declarations">変数宣言</a>
+    </li>
+    <li>
+      <a href="#variable-and-property-names">変数とプロパティの名前</a>
+    </li>
+    <li>
+      <a href="#class-names">クラスの名前</a>
+    </li>
+    <li>
+      <a href="#constants">定数</a>
+    </li>
+    <li>
+      <a href="#object-array-creation">Object / Array の作成</a>
+    </li>
+    <li>
+      <a href="#equality-operator">同値演算子</a>
+    </li>
+    <li>
+      <a href="#extending-prototypes">prototype の拡張</a>
+    </li>
+    <li>
+      <a href="#conditions">条件文</a>
+    </li>
+    <li>
+      <a href="#function-length">関数の長さ</a>
+    </li>
+    <li>
+      <a href="#return-statements">return 文</a>
+    </li>
+    <li>
+      <a href="#named-closures">名前付きクロージャ</a>
+    </li>
+    <li>
+      <a href="#nested-closures">ネストされたクロージャ</a>
+    </li>
+    <li>
+      <a href="#callbacks">コールバック</a>
+    </li>
+    <li>
+      <a href="#object.freeze-object.preventextensions-object.seal-with-eval">Object.freeze, Object.preventExtensions, Object.seal, with, eval</a>
+    </li>
+    <li>
+      <a href="#getters-and-setters">getter と setter</a>
+    </li>
+    <li>
+      <a href="#eventemitters">EventEmitter</a>
+    </li>
+    <li>
+      <a href="#inheritance-object-oriented-programming">継承 / オブジェクト指向プログラミング</a>
+    </li>
+  </ul>
+  </nav>
+  <p>node.jsアプリケーションのスタイルを支配する公的な文章はありません。このガイドはあなたが美しく、一貫したソフトウェアを作れるようになる教訓を与えようとする私の独断の試みです。</p>
+  <p>このガイドはあなたがnode.jsのみを対象にしていると仮定しています。もしあなたのコードをブラウザなど他の環境でも動かす必要があるのなら、いくつかのガイドは無視してください。</p>
+  <p>様々なパッケージだけではなくnode.jsもまた、それぞれ自体のスタイルを持っています。なので何かのパッケージの開発に貢献することに興味があるのならば、それぞれのルールに従ってコーディングを楽しんでください。</p>
+
+  <h2 id="tab-vs-spaces"><a href="#TOC">Tab vs Spaces</a></h2>
+  <p>まずはこの宗教的な問題の話をしましょう。私達の<a href="http://nodeguide.com/community.html#ryan-dahl" hreflang="en">慈悲深い独裁者様</a>はnodeのコアに2スペースのインデントを選択なさったので、彼の秩序に従うのが賢明でしょう。</p>
+
+  <h2 id="semicolons"><a href="#TOC">セミコロン</a></h2>
+  <p>あなたからセミコロンを奪おうとする<a href="http://nodeguide.com/community.html#isaac-schlueter" hreflang="en">反抗的な軍隊</a>があるようです。でも確かに私達の伝統的な文化はまだ<a href="http://news.ycombinator.com/item?id=1547647" hreflang="en">元気に生き残っています</a>。だからコミュニティに従って、セミコロンを使いなさい！</p>
+
+  <h2 id="editors"><a href="#TOC">エディタ</a></h2>
+  <p>どんなエディタを使ってもいいです。しかし、JavaScriptの構文ハイライトと、現在開いているファイルをnode.jsで実行できることはとても役に立つでしょう。<a href="http://www.vim.org/" hreflang="en">Vim</a>は女の子にもてる為には役にたたないかも知れませんが、私達の<a href="http://en.wikipedia.org/wiki/BDFL" hreflang="en">BFDL</a>(訳注:オープンソースソフトウェア開発のリーダー)を満足させ、あなたのおじいさんもまた賛成するでしょう。</p>
+  <p>私(訳注:原文筆者)はこのドキュメントをiPadの「メモ」で書いていますが、それは私がタイのベンチに座っているからです。このように、あなたの開発環境はあなたのエディタにも影響を与えるでしょう。</p>
+
+  <h2 id="trailing-whitespace"><a href="#TOC">末尾の空白</a></h2>
+  <p>ご飯の後には歯を磨くように、あなたのJavaScriptファイルをコミットする前に末尾の空白はすべて取り除きましょう。そうでなければ不注意な怠慢による悪臭によってコントリビューターや同僚はしばらくのちに逃げ出すでしょう。</p>
+
+  <h2 id="line-length"><a href="#TOC">一行の長さ</a></h2>
+  <p>一行の長さは80文字に制限してください。スクリーンは確かにここ数年で十分大きくなりましたが、あなたの脳は大きくなっていません。スクリーンを増やす為にもう一部屋使いましょうか。あなたのエディタはサポートしていますよね？</p>
+
+  <h2 id="quotes"><a href="#TOC">クォート</a></h2>
+  <p>JSON以外ではシングルクォートを使いましょう。</p>
+  <p><em>せいかい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">var</span> foo = <span class="ch">'bar'</span>;
+  </code>
+  </pre>
+  <p><em>まちがい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">var</span> foo = <span class="ch">&quot;bar&quot;</span>
+  </code>
+  </pre>
+
+  <h2 id="braces"><a href="#TOC">中括弧</a></h2>
+  <p>開き括弧は文と同じ行に置きましょう。</p>
+  <p><em>せいかい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">if</span> (<span class="kw">true</span>) {<br />
+    &#160;&#160;<span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">'winning'</span>);<br />
+    }
+  </code>
+  </pre>
+  <p><em>まちがい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">if</span> (<span class="kw">true</span>)<br />
+    {<br />
+    &#160;&#160;<span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">'losing'</span>);<br />
+    }
+  </code>
+  </pre>
+  <p>条件文の前後のスペースの使い方にも注意してください。</p>
+
+  <h2 id="variable-declarations"><a href="#TOC">変数宣言</a></h2>
+  <p>行の順番の変更が簡単になるので、一文ごとに一つの変数を宣言しましょう。ここでは<a href="http://javascript.crockford.com/code.html" hreflang="en">Crockford</a>は無視して、道理にかなったところで宣言してください。</p>
+  <p><em>せいかい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">var</span> keys = [<span class="ch">'foo'</span>, <span class="ch">'bar'</span>];<br />
+    <span class="kw">var</span> values = [<span class="dv">23</span>, <span class="dv">42</span>];<br />
+    <br />
+    <span class="kw">var</span> object = {};<br />
+    <span class="kw">while</span> (<span class="kw">items</span>.<span class="fu">length</span>) {<br />
+    &#160;&#160;var key = <span class="kw">keys</span>.<span class="fu">pop</span>();<br />
+    &#160;&#160;object[key] = <span class="kw">values</span>.<span class="fu">pop</span>();<br />
+    }
+  </code>
+  </pre>
+  <p><em>まちがい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">var</span> keys = [<span class="ch">'foo'</span>, <span class="ch">'bar'</span>],<br />
+    &#160; &#160;values = [<span class="dv">23</span>, <span class="dv">42</span>],<br />
+    &#160; &#160;object = {},<br />
+    &#160; &#160;key;
+    <br />
+    <br />
+    <span class="kw">while</span> (<span class="kw">items</span>.<span class="fu">length</span>) {<br />
+    &#160;&#160;key = <span class="kw">keys</span>.<span class="fu">pop</span>();<br />
+    &#160;&#160;object[key] = <span class="kw">values</span>.<span class="fu">pop</span>();<br />
+    }
+  </code>
+  </pre>
+
+  <h2 id="variable-and-property-names"><a href="#TOC">変数とプロパティの名前</a></h2>
+  <p>変数とプロパティの名前には<a href="http://ja.wikipedia.org/wiki/キャメルケース#.E3.82.AD.E3.83.A3.E3.83.A1.E3.83.AB.E3.82.B1.E3.83.BC.E3.82.B9.E3.81.AE.E7.A8.AE.E9.A1.9E" hreflang="ja">ローワーキャメルケース</a>を使うべきです。それは分かりやすいものでもあるのです。一文字の変数や一般的でない略語は普通避けるべきです。</p>
+  <p><em>せいかい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">var</span> adminUser = <span class="kw">db</span>.<span class="fu">query</span>(<span class="ch">'SELECT * FROM users ...'</span>);
+  </code>
+  </pre>
+  <p><em>まちがい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">var</span> admin_user = <span class="kw">d</span>.<span class="fu">query</span>(<span class="ch">'SELECT * FROM users ...'</span>);
+  </code>
+  </pre>
+
+  <h2 id="class-names"><a href="#TOC">クラスの名前</a></h2>
+  <p>クラスの名前には<a href="http://ja.wikipedia.org/wiki/キャメルケース#.E3.82.AD.E3.83.A3.E3.83.A1.E3.83.AB.E3.82.B1.E3.83.BC.E3.82.B9.E3.81.AE.E7.A8.AE.E9.A1.9E" hreflang="ja">アッパーキャメルケース</a>を使うべきです。</p>
+  <p><em>せいかい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">function</span> BankAccount() {<br />
+    }
+  </code>
+  </pre>
+  <p><em>まちがい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">function</span> bank_Account() {<br />
+    }
+  </code>
+  </pre>
+
+  <h2 id="constants"><a href="#TOC">定数</a></h2>
+  <p>定数は普通の変数やクラスのプロパティとして、すべて大文字で宣言されるべきです。</p>
+  <p>node.js(V8)は実はMozilla拡張ののconst文をサポートしているのですが、残念ながらクラスのメンバには適用できず、ECMA標準にも含まれていないのです。</p>
+  <p><em>せいかい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">var</span> SECOND = <span class="dv">1</span> * <span class="dv">1000</span>;<br />
+    <br />
+    <span class="kw">function</span> File() {<br />
+    }<br />
+    <span class="kw">File</span>.<span class="fu">FULL</span>_<span class="fu">PERMISSIONS</span> = <span class="dv">0777</span>;
+  </code>
+  </pre>
+  <p><em>まちがい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+  <span class="kw">const</span> SECOND = <span class="dv">1</span> * <span class="dv">1000</span>;<br />
+  <br />
+  <span class="kw">function</span> File() {<br />
+  }<br />
+  <span class="kw">File</span>.<span class="fu">fullPermissions</span> = <span class="dv">0777</span>;&#160;
+  </code>
+  </pre>
+
+  <h2 id="object-array-creation"><a href="#TOC">Object / Array の作成</a></h2>
+  <p>最後にはコンマを置いて、一行で<em>短い</em>宣言をしてください。キーにクォートを使うのはインタプリタが文句を言うときだけです。</p>
+  <p><em>せいかい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">var</span> a = [<span class="ch">'hello'</span>, <span class="ch">'world'</span>];<br />
+    <span class="kw">var</span> b = {<br />
+    &#160;&#160;<span class="dt">good</span>: <span class="ch">'code'</span>,<br />
+    &#160;&#160;<span class="ch">'is generally'</span>: <span class="ch">'pretty'</span>,<br />
+    };
+  </code>
+  </pre>
+  <p><em>まちがい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">var</span> a = [<br />
+    &#160;&#160;<span class="ch">'hello'</span>, <span class="ch">'world'</span><br />
+    ];<br />
+    <span class="kw">var</span> b = {<span class="st">&quot;good&quot;</span>: <span class="ch">'code'</span><br />
+    &#160; &#160; &#160; &#160; , is <span class="dt">generally</span>: <span class="ch">'pretty'</span><br />        };
+  </code>
+  </pre>
+
+  <h2 id="equality-operator"><a href="#TOC">同値演算子</a></h2>
+  <p>プログラミングとは<a href="https://developer.mozilla.org/en/JavaScript/Reference/Operators/Comparison_Operators" hreflang="en">くだらないルール</a>を覚えることではありません。あなたの期待通りに動かすために、===演算子を使いましょう。</p>
+  <p><em>せいかい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">var</span> a = <span class="dv">0</span>;<br />
+    <span class="kw">if</span> (a === <span class="ch">''</span>) {<br />
+    &#160;&#160;<span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">'winning'</span>);<br />
+    }
+  </code>
+  </pre>
+  <p><em>まちがい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+  <span class="kw">var</span> a = <span class="dv">0</span>;<br />
+  <span class="kw">if</span> (a == <span class="ch">''</span>) {<br />
+  &#160;&#160;<span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">'losing'</span>);<br />
+  }
+  </code>
+  </pre>
+
+  <h2 id="extending-prototypes"><a href="#TOC">prototype の拡張</a></h2>
+  <p>すべてのオブジェクト、特にネイティブオブジェクトのprototypeは拡張しないでください。このルールに従わないのならば地獄が待っています。</p>
+  <p><em>せいかい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">var</span> a = [];<br />
+    <span class="kw">if</span> (!<span class="kw">a</span>.<span class="fu">length</span>) {<br />
+    &#160;&#160;<span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">'winning'</span>);<br />
+    }
+  </code>
+  </pre>
+  <p><em>まちがい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">Array</span>.<span class="fu">prototype</span>.<span class="fu">empty</span> = <span class="kw">function</span>() {<br />
+    &#160;&#160;return !<span class="kw">this</span>.<span class="fu">length</span>;<br />
+    }<br />
+    <br />
+    <span class="kw">var</span> a = [];<br />
+    <span class="kw">if</span> (<span class="kw">a</span>.<span class="fu">empty</span>()) {<br />
+    &#160;&#160;<span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">'losing'</span>);<br />
+    }
+  </code>
+  </pre>
+
+  <h2 id="conditions"><a href="#TOC">条件文</a></h2>
+  <p>すべての自明でない条件文にはわかりやすい名前の変数が与えられるべきです。</p>
+  <p><em>せいかい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">var</span> isAuthorized = (<span class="kw">user</span>.<span class="fu">isAdmin</span>() || <span class="kw">user</span>.<span class="fu">isModerator</span>());<br />
+    <span class="kw">if</span> (isAuthorized) {<br />
+    &#160;&#160;<span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">'winning'</span>);<br />
+    }
+  </code>
+  </pre>
+  <p><em>まちがい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">if</span> (<span class="kw">user</span>.<span class="fu">isAdmin</span>() || <span class="kw">user</span>.<span class="fu">isModerator</span>()) {<br />
+    &#160;&#160;<span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">'losing'</span>);<br />
+    }
+  </code>
+  </pre>
+
+  <h2 id="function-length"><a href="#TOC">関数の長さ</a></h2>
+  <p>関数は短くしましょう。よい関数は、一枚のスライドに、大きな部屋の一番後ろの列にいる人が快適に読めるようにおさまります。だから完璧な見た目は期待せず、関数ごとに10行ぐらいで我慢してください。</p>
+
+  <h2 id="return-statements"><a href="#TOC">return 文</a></h2>
+  <p>if分の深いネストを避けるために、出来るだけ早く関数から値をreturnしてください。</p>
+  <p><em>せいかい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">function</span> isPercentage(val) {<br />
+    &#160;&#160;if (val &lt; <span class="dv">0</span>) {<br />
+    &#160;&#160; &#160;return <span class="kw">false</span>;<br />
+    &#160;&#160;}<br />
+    <br />
+    &#160;&#160;if (val &gt; <span class="dv">100</span>) {<br />
+    &#160;&#160; &#160;return <span class="kw">false</span>;<br />
+    &#160;&#160;}<br />
+    <br />
+    &#160;&#160;return <span class="kw">true</span>;<br />
+    }
+  </code>
+  </pre>
+  <p><em>まちがい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">function</span> isPercentage(val) {<br />
+    &#160;&#160;if (val &lt; <span class="dv">0</span>) {<br />
+    &#160;&#160; &#160;if (val &gt; <span class="dv">100</span>) {<br />
+    &#160;&#160; &#160; &#160;return <span class="kw">false</span>;<br />
+    &#160;&#160; &#160;} <span class="kw">else</span> {<br />
+    &#160;&#160; &#160; &#160;return <span class="kw">true</span>;<br />
+    &#160;&#160; &#160;}<br />
+    &#160;&#160;} <span class="kw">else</span> {<br />
+    &#160;&#160; &#160;return <span class="kw">false</span>;<br />
+    &#160;&#160;}<br />
+    }
+  </code>
+  </pre>
+  <p>この例の場合はもっと短くしてもいいでしょう。</p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">function</span> isPercentage(val) {<br />
+    &#160;&#160;var isInRange = (val &gt;= <span class="dv">0</span> &amp;&amp; val &lt;= <span class="dv">100</span>);<br />
+    &#160;&#160;return&#160;isInRange;<br />
+    }
+  </code>
+  </pre>
+
+  <h2 id="named-closures"><a href="#TOC">名前付きクロージャ</a></h2>
+  <p>クロージャに名前をつけても大丈夫です。あなたがその関数に注意していることを強調でき、またより良いスタックトレースを生み出すでしょう。</p>
+  <p><em>せいかい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">req</span>.<span class="fu">on</span>(<span class="ch">'end'</span>, <span class="kw">function</span> onEnd() {<br />
+    &#160;&#160;<span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">'winning'</span>);<br />
+    });
+  </code>
+  </pre>
+  <p><em>まちがい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">req</span>.<span class="fu">on</span>(<span class="ch">'end'</span>, <span class="kw">function</span>() {<br />
+    &#160;&#160;<span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">'losing'</span>);<br />
+    });
+  </code>
+  </pre>
+
+  <h2 id="nested-closures"><a href="#TOC">ネストされたクロージャ</a></h2>
+  <p>クロージャは使って良いですが、ネストしないでください。そうでなければコードはぐちゃぐちゃになるでしょう。</p>
+  <p><em>せいかい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    setTimeout(<span class="kw">function</span>() {<br />
+    &#160;&#160;<span class="kw">client</span>.<span class="fu">connect</span>(afterConnect);<br />
+    }, <span class="dv">1000</span>);<br />
+    <br />
+    <span class="kw">function</span> afterConnect() {<br />
+    &#160;&#160;<span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">'winning'</span>);<br />
+    }
+  </code>
+  </pre>
+  <p><em>まちがい:</em></p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    setTimeout(<span class="kw">function</span>() {<br />
+    &#160;&#160;<span class="kw">client</span>.<span class="fu">connect</span>(<span class="kw">function</span>() {<br />
+    &#160;&#160; &#160;<span class="kw">console</span>.<span class="fu">log</span>(<span class="ch">'losing'</span>);<br />
+    &#160;&#160;});<br />
+    }, <span class="dv">1000</span>);
+  </code>
+  </pre>
+
+  <h2 id="callbacks"><a href="#TOC">コールバック</a></h2>
+  <p>nodeはI/Oをブロックしないための物なので、関数は普通コールバックを使って結果を返します。nodeのコアでの慣習にすべてのコールバック関数の最初の引数を任意のエラーオブジェクトのために予約しておくというものがあります。</p>
+  <p>あなたもコールバック関数では同じアプローチをするべきです。</p>
+
+  <h2 id="object.freeze-object.preventextensions-object.seal-with-eval"><a href="#TOC">Object.freeze, Object.preventExtensions, Object.seal, with, eval</a></h2>
+  <p>永遠に不必要だろうくそったれ共です。近づかないでください。</p>
+
+  <h2 id="getters-and-setters"><a href="#TOC">getter と setter</a></h2>
+  <p>セッターを使わないでください。あなたのソフトウェアを使う人々が自身で解決できない問題を引き起こす可能性があります。</p>
+  <p><a href="http://ja.wikipedia.org/wiki/副作用_(プログラム)" hreflang="ja">副作用</a>のないゲッターを使うことを気にしないでください。たとえば集合のクラスのlengthプロパティを提供することなどです。</p>
+
+  <h2 id="eventemitters"><a href="#TOC">EventEmitter</a></h2>
+  <p>Node.jsは'event'モジュールからインクルードできるEventEmitterというシンプルなクラスを搭載しています。</p>
+  <pre class="sourceCode">
+  <code class="javascript">
+    <span class="kw">var</span> EventEmitter = require(<span class="ch">'events'</span>).<span class="fu">EventEmitter</span>;
+  </code>
+  </pre>
+  <p>複雑なクラスを作るとき、イベントを発行するためにこのEventEmitterクラスを継承するのが普通です。このクラスは<a href="http://ja.wikipedia.org/wiki/Observer_パターン" hreflang="ja">Observerパターン</a>の単純な実装です。</p>
+  <p>しかし、私はあなたのクラス自身からのイベントを受け取らないようにすることを強く推奨します。オブジェクトが自身を監視することは不自然です。そのようなことはしばしば内部の実装の詳細を望ましくないことで晒してしまう原因となり、あなたのコードをたどる事をずっと難しくしてしまうからです。</p>
+
+  <h2 id="inheritance-object-oriented-programming"><a href="#TOC">継承 / オブジェクト指向プログラミング</a></h2>
+  <p>継承とオブジェクト指向プログラミングはそれだけで大きな主題です。あなたかこの有名なプログラミングモデルに従うことに興味があるのならば、<a href="http://nodeguide.com/object_oriented_programming.html" hreflang="ja">私のオブジェクト指向プログラミングのガイド</a>を読んでください。</p>
+
+  <div class="copyright">
+    © 2011, <a href="http://debuggable.com/">Debuggable Limited</a>.<br />
+    Translated by <a href="http://twitter.com/popkirby">@popkirby</a>. 和訳の間違いなどの連絡は <a href="http://twitter.com/popkirby">@popkirby</a>まで.
+  </div>
+
+</body>
+</html>
