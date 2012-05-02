@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>(´へωへ`*)</title>
+  <script type="text/javascript">
+    var a = 0, $;
+    window.addEventListener('load', function(){
+      window.setInterval(kaochange, 500);
+    });
+    function kaochange(){
+        $ = $ || document.getElementById('kao');
+        $.innerHTML = a ? '(´へεへ`*)' : '(´へωへ`*)';
+        a = !a;
+    }
+  </script>
+</head>
+<body>
+  <div id="kao">(´へωへ`*)</div>
+</body>
+</html>
