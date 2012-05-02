@@ -4,18 +4,26 @@
   <meta charset="UTF-8">
   <title>(´へωへ`*)</title>
   <script type="text/javascript">
-    var a = 0, $;
+    var a = 0, $, b = 0, $$;
     window.addEventListener('load', function(){
       window.setInterval(kaochange, 500);
+      window.setInterval(kaochange2, 500);
     });
     function kaochange(){
         $ = $ || document.getElementById('kao');
         $.innerHTML = a ? '(´へεへ`*)' : '(´へωへ`*)';
         a = !a;
     }
+    var kaos = ['(´へωへ`*)', '(´へ3へ`*)', '(´へmへ`*)', '(´へεへ`*)'];
+    function kaochange2(){
+        $$ = $$ || document.getElementById('kao2');
+        $$.innerHTML = kaos[b++];
+        if (b >= 4) b = 0;
+    }
   </script>
 </head>
 <body>
   <div id="kao">(´へωへ`*)</div>
+  <div id="kao2">(´へωへ`*)</div>
 </body>
 </html>
