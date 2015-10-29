@@ -1,0 +1,24 @@
+body {
+  color: #C9C9C9;
+  background-color: #362F3C;
+}
+
+a:link {
+  color: #57B1CF;
+}
+
+a:visited {
+  color: #5769CF;
+}
+
+dl {
+  padding-bottom: 1em;
+}
+
+dt {
+  color: #9E9E9E;
+}
+
+dd > *:not(font):not(ul):not(ol) {
+  color: #86A685;
+}
